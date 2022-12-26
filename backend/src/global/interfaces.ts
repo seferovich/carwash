@@ -25,7 +25,7 @@ export interface IOrder extends mongoose.Document {
             price: number
         },
     ],
-    customer: mongoose.Types.ObjectId | null, 
+    customer?: mongoose.Types.ObjectId | null, 
     total: number
 }
 

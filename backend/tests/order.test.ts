@@ -29,7 +29,7 @@ const customerTwoId = new mongoose.Types.ObjectId
 const customerTwo = {
     _id: customerTwoId,
     name: 'Test Customer2',
-    dob: '1969-04-20',
+    dob: '1948-04-20',
     points: 10
 }
 
@@ -64,6 +64,7 @@ customer: customerOneId
 beforeAll(async () => {
     await mongoose.connect(process.env.MONGODB_TEST_URL as string)
     await new Admin(adminOne).save()
+    await new Customer(customerTwo).save()
 })
 
 afterAll(async () => {
@@ -142,8 +143,8 @@ describe('POST, DELETE, GET /api/orders', () => {
             .expect(201)
         })
         describe('Given different customers', () => {
-            test('Should give a 20% discount if customer has 10 points', async () => {
-                const customer = await new Customer(customerTwo).save()
+            test('Should give a 30% discount because customer has 10 points and is 60+ years older', async () => {
+
 
                 const response = await request(app)
                 .post('/api/orders/create')
@@ -175,9 +176,7 @@ describe('POST, DELETE, GET /api/orders', () => {
                     customer: customerTwoId
                 }).expect(201)
 
-
-                // FIXME: Response gives back 16
-                expect(response.body.total).toEqual(12.8)
+                expect(response.body.total).toEqual(11.52)
                 
             
             })

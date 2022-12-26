@@ -85,8 +85,16 @@ orderSchema.pre('save', async function () {
     const customer = await Customer.findOne({_id: order.customer}) 
     let totalPrice = 0
     
+    
+    
+    for (const item of order.orders) {
+        if (item.selected && typeof item.price !== 'undefined') {
+            totalPrice += item.price
+        }
+    }
+
     if(customer && typeof customer !== null || undefined){
-        customer!.points++
+        
         if(customer!.points === 10){
             totalPrice = totalPrice - (totalPrice * .20)
         }
@@ -96,17 +104,15 @@ orderSchema.pre('save', async function () {
         if(customerAge >= 65){
             totalPrice = totalPrice - (totalPrice * .10)
         }
+
+        customer!.points++
+        
+
+        await customer?.save()
         
     }
     
-    for (const item of order.orders) {
-        if (item.selected && typeof item.price !== 'undefined') {
-            totalPrice += item.price
-        }
-    }
-
     
-
     order.total = totalPrice
 
     
