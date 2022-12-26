@@ -178,6 +178,7 @@ describe('POST, DELETE, GET /api/orders', () => {
 
                 // FIXME: Response gives back 16
                 expect(response.body.total).toEqual(12.8)
+                
             
             })
         })
