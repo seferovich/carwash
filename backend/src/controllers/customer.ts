@@ -62,8 +62,6 @@ const getAllCustomers = async (req: Request, res: Response) => {
 }
 
 
-
-
 export const customerControllers = {
     create,
     update,

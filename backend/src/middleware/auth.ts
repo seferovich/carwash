@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import Admin from "../models/adminModel"
-import { IJwtPayload } from "../global/interfaces"
+
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
     try{
@@ -22,5 +22,6 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
         res.status(401).send(e)
     }
 }
+
 
 export default auth

@@ -1,7 +1,4 @@
 import mongoose from "mongoose"
-import { AdminType } from "./types"
-import { Request } from "express"
-
 export interface IOrder extends mongoose.Document {
     orders: [     
         {
@@ -48,12 +45,8 @@ export interface IAdminModel extends mongoose.Model<IAdmin> {
     // here we decalre statics
     findByCredentials(username: string, password: string): IAdmin
 }
-// export interface IReqAdmin extends Request{
-//     token?: string,
-//     admin: IAdmin
-// }
 
 export interface IJwtPayload {
-    _id: string
+    _id: mongoose.Types.ObjectId,
 }
 

@@ -85,8 +85,6 @@ orderSchema.pre('save', async function () {
     const customer = await Customer.findOne({_id: order.customer}) 
     let totalPrice = 0
     
-    
-    
     for (const item of order.orders) {
         if (item.selected && typeof item.price !== 'undefined') {
             totalPrice += item.price
@@ -107,17 +105,12 @@ orderSchema.pre('save', async function () {
 
         customer!.points++
         
-
         await customer?.save()
         
     }
     
-    
     order.total = totalPrice
-
-    
 })
-
 
 
 const Order = mongoose.model<IOrder>('Order', orderSchema)

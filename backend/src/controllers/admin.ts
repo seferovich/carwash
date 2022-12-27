@@ -1,5 +1,5 @@
 import Admin from "../models/adminModel";
-import { RequestHandler, Request, Response } from "express";
+import { Request, Response } from "express";
 
 const register = async (req: Request, res: Response) => {
     const admin = new Admin(req.body)

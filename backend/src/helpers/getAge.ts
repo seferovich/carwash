@@ -1,3 +1,5 @@
+// Helper function for getting age from a date.
+
 function getAge(dateString: Date) {
     let today = new Date()
     let birthDate = new Date(dateString as Date)

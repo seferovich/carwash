@@ -5,8 +5,8 @@ const adminRouter = express.Router()
 
 adminRouter.post('/api/admin/create', adminController.register)
 adminRouter.post('/api/admin/login', adminController.login)
-adminRouter.delete('/api/admin/delete', auth, adminController.remove)
 adminRouter.post('/api/admin/logout', auth, adminController.logout)
+adminRouter.delete('/api/admin/delete', auth, adminController.remove)
 adminRouter.get('/api/admin/get', auth, adminController.getAdmin)
 
 

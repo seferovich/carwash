@@ -41,6 +41,7 @@ adminSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+// Finding admin by username and comparing passwords
 adminSchema.statics.findByCredentials = async (username: string, password: string) => {
     const admin = await Admin.findOne({username})
     if(!admin) {

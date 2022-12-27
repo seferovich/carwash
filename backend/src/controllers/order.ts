@@ -51,6 +51,7 @@ const getAllOrders = async (req: Request, res: Response) => {
     }
 }
 
+
 export const orderController = {
     create,
     getOrderById,
