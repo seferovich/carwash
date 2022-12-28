@@ -23,6 +23,8 @@ customerSchema.pre('save', function(){
     }
 })
 
+
+
 const Customer = mongoose.model<ICustomer>('Customer', customerSchema)
 
 export default Customer

@@ -46,7 +46,4 @@ export interface IAdminModel extends mongoose.Model<IAdmin> {
     findByCredentials(username: string, password: string): IAdmin
 }
 
-export interface IJwtPayload {
-    _id: mongoose.Types.ObjectId,
-}
 
