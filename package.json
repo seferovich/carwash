@@ -1,0 +1,23 @@
+{
+  "name": "carwash",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "npm run dev --prefix backend",
+    "frontend": "npm start --prefix frontend",
+    "start": "concurrently \"npm run server\" \"npm run frontend\""
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sefkelol/carwash.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sefkelol/carwash/issues"
+  },
+  "homepage": "https://github.com/sefkelol/carwash#readme"
+}
