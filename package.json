@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "env-cmd -f ./config/dev.env nodemon --watch './**/*.ts' --exec ts-node --files src/index.ts",
-    "test": "env-cmd -f ./config/test.env jest --watch --detectOpenHandles",
+    "test": "env-cmd -f ./config/test.env jest --detectOpenHandles",
     "start": "node ./build/index.js",
     "postinstall": "tsc"
   },
