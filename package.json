@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "env-cmd -f ./config/dev.env nodemon --watch './**/*.ts' --exec ts-node --files src/index.ts",
-    "test": "env-cmd -f ./config/test.env jest --detectOpenHandles",
+    "devtest": "env-cmd -f ./config/test.env jest --detectOpenHandles",
     "start": "node ./build/index.js",
-    "postinstall": "tsc"
+    "postinstall": "tsc",
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
