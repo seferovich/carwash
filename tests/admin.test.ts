@@ -44,6 +44,7 @@ describe('POST, DELETE, GET /api/admin', () => {
             expect(admin).not.toBeNull()
         })
 
+
         test('Should login into an existing admin account', async () => {
             const response = await request(app)
             .post('/api/admin/login')
@@ -90,39 +91,3 @@ describe('POST, DELETE, GET /api/admin', () => {
     })
 })
 
-
-
-// name: Deploy
-
-// on: push
-
-// jobs:
-  
-//   build:
-//     runs-on: ubuntu-latest
-//     steps:      
-//       - uses: actions/checkout@v3
-//       - name: Use node
-      
-//         uses: actions/setup-node@v3
-//         with:
-//           node-version: 16 
-             
-//       - name: Install dependecies
-//         run: npm install
-//       - name: Run tests
-//         env:
-//             JWT_SECRET: ${{ secrets.JWT_SECRET}}
-//             MONGODB_URL: ${{ secrets.MONGODB_TEST_URL }}
-//         run: npm run test
-
-//   deploy:
-//     runs-on: ubuntu-latest
-//     needs: [build]
-//     steps:
-//       - uses: actions/checkout@v2
-//       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-//         with:
-//           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-//           heroku_app_name: "carwash" 
-//           heroku_email: "seferovicisa@gmail.com"
