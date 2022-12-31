@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "env-cmd -f ./config/dev.env nodemon --watch './**/*.ts' --exec ts-node --files src/index.ts",
+    "client": "npm start --prefix client",
+    "backend": "env-cmd -f ./config/dev.env nodemon --watch './**/*.ts' --exec ts-node --files src/index.ts",
+    "dev": "concurrently \"npm run client\" \"npm run dev\" ",
     "devtest": "env-cmd -f ./config/test.env jest --detectOpenHandles",
     "start": "node ./build/index.js",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "postinstall": "tsc",
     "test": "jest --detectOpenHandles"
   },
