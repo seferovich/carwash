@@ -7,7 +7,6 @@
       "esnext"
     ],
     "allowJs": true,
-    "outDir": "./build", 
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -22,6 +21,6 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src/**/*"
+    "src"
   ]
 }
