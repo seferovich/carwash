@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react'
-const drawerWidth = 240
+const drawerWidth = 280
 
 function Orders() {
   return (

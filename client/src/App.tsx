@@ -9,6 +9,7 @@ import Statistics from './pages/Statistics';
 import { createTheme, ThemeProvider } from '@mui/material';
 import Login from './pages/Login';
 import Main from './Main';
+import NotFound from './pages/NotFound';
 
 const theme = createTheme({
   palette: {
@@ -31,6 +32,7 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/main/*' element={<Main />} />
+          <Route path='/*' element={<NotFound />} />
         </Routes>
       </div>
     </ThemeProvider>
