@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Customers from './pages/Customers';
 import NewCustomer from './pages/NewCustomer';
@@ -30,18 +30,19 @@ const theme = createTheme({
 
 
 function App() {
-  // const navigate = useNavigate()
-  // const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
-  // useEffect(() => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
+  useEffect(() => {
     
 
-  //   if(!admin){
-  //     navigate('/login')
-  //   }
+    if(!admin || location.pathname === '/'){
+      navigate('/login')
+    }
 
     
 
-  // }, [admin, isError, isSuccess, message, navigate])
+  }, [admin, isError, isSuccess, message, navigate])
   
 
   
