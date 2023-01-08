@@ -1,0 +1,8 @@
+{
+    "short_name": "CloseWeUI",
+    "name": "The front-end UI for CloseWe",
+    "start_url": "/login",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
+  }

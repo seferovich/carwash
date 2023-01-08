@@ -1,25 +1,85 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import React from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { IAdmin } from '../globals/interfaces';
+import {useNavigate} from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { login, reset } from '../features/auth/authSlice'
+import CircularProgress from '@mui/material/CircularProgress';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks'
+import { useEffect, useState } from 'react';
+
+
+
 
 function Login() {
+
+  const [formData, setFormData] = useState<IAdmin>({
+    username: '',
+    password: ''
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement
+    setFormData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value
+    }))
+  }
+
+  const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const adminData = {username, password}
+    dispatch(login(adminData))
+  }
+
+  const {username, password} = formData
+
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
+
+  useEffect(() => {
+    if(isError){
+        toast.error(message)
+    }
+
+    if(isSuccess || admin){
+      navigate('/main/orders/new')
+    }
+
+    dispatch(reset())
+
+  }, [admin, isError, isSuccess, message, navigate, dispatch])
+
+
+  if(isLoading){
+    return (
+      <Container maxWidth='xs'>
+        <CssBaseline />
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+          marginTop: '40vh'
+        }}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    )
+  }
   return (
     
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 30,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -31,15 +91,15 @@ function Login() {
         <Typography component="h1" variant="h6">
           Please login to continue:
         </Typography>
-        <Box component="form" onSubmit={undefined} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            onChange={handleChange}
             autoFocus
           />
           <TextField
@@ -49,6 +109,7 @@ function Login() {
             name="password"
             label="Password"
             type="password"
+            onChange={handleChange}
             id="password"
             autoComplete="current-password"
           />
@@ -58,7 +119,7 @@ function Login() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Log In
           </Button>
         </Box>
       </Box>

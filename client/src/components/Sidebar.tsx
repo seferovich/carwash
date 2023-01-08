@@ -2,6 +2,7 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import PersonIcon from '@mui/icons-material/Person';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -13,12 +14,14 @@ import ListItemText from '@mui/material/ListItemText';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import PersonIcon from '@mui/icons-material/Person';
 import SellIcon from '@mui/icons-material/Sell';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
+
+
+
 const drawerWidth = 280;
 
 
@@ -35,7 +38,7 @@ export default function Sidebar() {
       <Divider />
       <List >
         {['New order', 'New customer'].map((text: string, index: number) => (
-          <Link to={index % 2 === 0 ? '/main/orders/new' : '/main/customers/new'}>
+          <Link key={index} to={index % 2 === 0 ? '/main/orders/new' : '/main/customers/new'}>
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>  
@@ -106,6 +109,7 @@ export default function Sidebar() {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography sx={{fontSize: '26px'}} variant="h5" noWrap component="div">
             CarwashUI
           </Typography>

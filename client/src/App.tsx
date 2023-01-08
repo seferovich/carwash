@@ -1,5 +1,5 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom';
+import React, {useEffect} from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Customers from './pages/Customers';
 import NewCustomer from './pages/NewCustomer';
@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import Login from './pages/Login';
 import Main from './Main';
 import NotFound from './pages/NotFound';
+import { useAppDispatch, useAppSelector } from './hooks/hooks'
 
 const theme = createTheme({
   palette: {
@@ -22,10 +23,28 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'Roboto Condensed',
-    fontSize: 16.5
+    fontSize: 16
   }
 })
+
+
+
 function App() {
+  // const navigate = useNavigate()
+  // const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
+  // useEffect(() => {
+    
+
+  //   if(!admin){
+  //     navigate('/login')
+  //   }
+
+    
+
+  // }, [admin, isError, isSuccess, message, navigate])
+  
+
+  
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
