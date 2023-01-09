@@ -18,8 +18,7 @@ function Main() {
         <Route path='/customers/new' element={<NewCustomer />} />
         <Route path='/customers' element={<Customers />} />
         <Route path='/orders' element={<Orders />} />
-        <Route path='/statistics' element={<Statistics />} />
-      </Routes>
+        </Routes>
     </div>
   )
 }

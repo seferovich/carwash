@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
+import { toast } from 'react-toastify';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,19 +19,50 @@ import SellIcon from '@mui/icons-material/Sell';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
+import {Container} from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks'
+import { logout, reset} from '../features/auth/authSlice';
 
 
 
-const drawerWidth = 280;
+const drawerWidth = 280
 
 
 export default function Sidebar() {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false)
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+    setMobileOpen(!mobileOpen)
+  }
+
+  const handleLogout = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.preventDefault()
+    dispatch(logout())
+  }
+
+
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
+
+  useEffect(() => {
+    if(isError){
+        toast.error(message)
+    }
+
+    if(isSuccess || !admin){
+      navigate('/login')
+    }
+
+    dispatch(reset())
+
+  }, [admin, isError, isSuccess, message, navigate, dispatch])
+
+
 
   const drawer = (
     <div>
@@ -74,19 +106,42 @@ export default function Sidebar() {
           </ListItem>
         </Link> 
 
-        <Link to='/main/statistics'>
-          <ListItem disablePadding>
+        
+        <Divider />
+        {/* <Link> */}
+          <ListItem  onClick={handleLogout} disablePadding>
             <ListItemButton>
                 <ListItemIcon>
-                    <TrendingUpIcon color="primary" />
+                    <LogoutIcon color="primary" />
                 </ListItemIcon>
-                <ListItemText sx={{fontSize: '50px'}} primary='Statistics'>Statistics</ListItemText>
+                <ListItemText sx={{fontSize: '50px'}} primary='Log out'>Log out</ListItemText>
             </ListItemButton>            
           </ListItem>
-        </Link>
+        {/* </Link> */}
       </List>
-    </div> 
-  );
+
+      
+    </div>
+    
+    
+  )
+
+  if(isLoading){
+    return (
+      <Container sx={{zIndex: 99}} maxWidth='xs'>
+        <CssBaseline />
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+          marginTop: '40vh',
+          zIndex: 99
+        }}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    )
+  }
 
 
   return (
@@ -153,5 +208,5 @@ export default function Sidebar() {
         <Toolbar />
       </Box> */}
     </Box>
-  );
+  )
 }

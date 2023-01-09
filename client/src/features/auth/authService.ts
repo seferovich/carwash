@@ -1,7 +1,7 @@
 import axios from "axios"
 import {IAdmin} from "../../globals/interfaces"
 
-const link = process.env.PORT || 'http://localhost:5001'
+// 'http://localhost:5001'
 const login = async (adminData: IAdmin) => {
     // Added this link so it works on Heroku
     const response = await axios.post('/api/admin/login', adminData)
@@ -18,7 +18,7 @@ const logout = async (token: string) => {
         },
       }
       // Added this link so it works on Heroku
-    await axios.post('http://localhost:5001/api/admin/logout', undefined, config)
+    await axios.post('/api/admin/logout', undefined, config)
     localStorage.removeItem('jwt')
 }
 export const authServices = {
