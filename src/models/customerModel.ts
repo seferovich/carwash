@@ -11,7 +11,9 @@ const customerSchema: Schema = new mongoose.Schema({
         required: true
     },
     points: {
-        type: Number,   
+        type: Number,
+        default: 0,
+        required: true   
     }
 })
  

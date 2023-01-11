@@ -1,43 +1,27 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Container, TextField, Button, Autocomplete, FormControl, Radio, RadioGroup, FormControlLabel, FormLabel} from '@mui/material'
-import { users } from '../globals/users';
+import { toast } from 'react-toastify';
+import { IOrder } from '../globals/interfaces';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
+import { useAppSelector } from '../hooks/hooks';
+import { ICustomer } from '../globals/interfaces';
+import { useAppDispatch } from '../hooks/hooks';
+import { reset, getAll, create } from '../features/customers/customerSlice';
+import {createOrder} from '../features/orders/orderSlice';
+
 
 const drawerWidth = 280
 
-interface IFormData {
-  order: [
-    {
-      name: string,
-      price: number,
-      selected: boolean
-    },
-    {
-      name: string,
-      price: number,
-      selected: boolean
-    },
-    {
-      name: string,
-      price: number,
-      selected: boolean
-    },
-    {
-      name: string,
-      price: number,
-      selected: boolean
-    }
-  ],
-  customer?: number | string | null
-}
 
 
 function NewOrder() {
-  const [formData, setFormData] = useState<IFormData>({
-    order: [
+
+
+  const [formData, setFormData] = useState<IOrder>({
+    orders: [
       {
         name: 'TyreWash',
         price: 12,
@@ -62,7 +46,7 @@ function NewOrder() {
     customer: undefined
   })
 
-
+  const dispatch = useAppDispatch()
   const handleChangeCustomer = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
     setFormData((prevState) => ({
@@ -74,6 +58,7 @@ function NewOrder() {
   const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(formData)
+    dispatch(createOrder(formData))
   }
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -82,13 +67,30 @@ function NewOrder() {
     console.log(target.id)
   }
 
-  // const handleChangeAutocomplete = 
+  
+
+  const {customers, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.customer)
+
+  useEffect(() => {
+    if(isError){
+        toast.error(message)
+    }
+
+    dispatch(reset())
+
+  }, [customers, isError, isSuccess, message, dispatch])
+
+  useEffect(() => {
+    dispatch(getAll())
+  }, [])
+ 
+ 
 
   const handleRadioButtonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
     setFormData((prevState) => {
       console.log(target.ariaSelected)
-      let updatedOrder: IFormData['order'] = [...prevState.order];
+      let updatedOrder: IOrder['orders'] = [...prevState.orders];
       if (target.name === 'FullWash') {
         updatedOrder[0].selected = true
         updatedOrder[1].selected = true
@@ -110,7 +112,7 @@ function NewOrder() {
       }
       return {
         ...prevState,
-        order: updatedOrder,
+        orders: updatedOrder,
       }
     })
   }
@@ -135,7 +137,7 @@ function NewOrder() {
           >
             
             <Typography component="h1" variant="h5">
-              Create a new customer
+              Create a new order
             </Typography>
 
             <Box onSubmit={handleSubmit} component="form" sx={{ mt: 1 }}>
@@ -143,17 +145,17 @@ function NewOrder() {
               <Autocomplete
                 disablePortal
                 onClick={handleClick}
-                options={users}
+                options={customers as ICustomer[]}
                 defaultValue={undefined}
                 fullWidth
                 sx={{width: 310}} 
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option?.name}
                 renderInput={(params) => <TextField {...params} label="Choose a customer" />}
 
                 onChange={(e, newValue) => {
                   e.preventDefault()
                   // I had to do this because I was getting an error 'cant read properties of null'
-                  if(newValue === null || newValue!.id === null){
+                  if(newValue === null || newValue!._id === null){
                     return setFormData(prevFormData => ({
                       ...prevFormData,
                       customer: undefined
@@ -161,7 +163,7 @@ function NewOrder() {
                   }else{
                     return setFormData(prevFormData => ({
                       ...prevFormData,
-                      customer: newValue!.id
+                      customer: newValue!._id
                     }))
                   }
                 }}
@@ -171,17 +173,17 @@ function NewOrder() {
                 <RadioGroup
                   aria-labelledby="demo-controlled-radio-buttons-group"
                   name="controlled-radio-buttons-group"
-                  value={formData.order[0]}
+                  value={formData.orders[0]}
                   onChange={handleRadioButtonChange}
 
                 >
-                  <FormControlLabel name='FullWash' control={<Radio checked={formData.order[0].selected && formData.order[3].selected }/>} label="Full Wash" />
-                  <FormControlLabel name='InteriorWash' control={<Radio checked={formData.order[3].selected && !formData.order[0].selected} />} label="Interior Wash" />
-                  <FormControlLabel name='ExteriorWash' control={<Radio checked={formData.order[0].selected && !formData.order[3].selected} />} label="Exterior Wash" />
+                  <FormControlLabel name='FullWash' control={<Radio checked={formData.orders[0].selected && formData.orders[3].selected }/>} label="Full Wash" />
+                  <FormControlLabel name='InteriorWash' control={<Radio checked={formData.orders[3].selected && !formData.orders[0].selected} />} label="Interior Wash" />
+                  <FormControlLabel name='ExteriorWash' control={<Radio checked={formData.orders[0].selected && !formData.orders[3].selected} />} label="Exterior Wash" />
                 </RadioGroup>
               </FormControl>
               
-              
+              <h2>{JSON.stringify(formData)}</h2>
               
 
               

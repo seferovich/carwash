@@ -1,11 +1,12 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-import {IAdmin} from '../../globals/interfaces'
-import { authServices } from './authServices'
+import {ICustomer} from '../../globals/interfaces'
+import { customerServices } from './customerServices'
 
 
-const admin = JSON.parse(localStorage.getItem('jwt') as string)
+const token = JSON.parse(localStorage.getItem('jwt') as string)
+
 export interface IState {
-    admin: IAdmin | null,
+    customers: ICustomer[] | null,
     isError: boolean,
     isLoading: boolean,
     isSuccess: boolean,
@@ -13,16 +14,16 @@ export interface IState {
 }
 
 const initialState: IState = {
-    admin: admin ? admin : null, 
+    customers: null, 
     isError: false,
     isLoading: false,
     isSuccess: false,
     message: ''
 }
 
-export const login = createAsyncThunk('auth/login', async (admin: IAdmin, thunkAPI) => {
+export const create = createAsyncThunk('customers/create', async (customer: ICustomer, thunkAPI) => {
     try{
-        return await authServices.login(admin)
+        return await customerServices.create(customer, token)
         
     }catch(error: any){
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -30,18 +31,19 @@ export const login = createAsyncThunk('auth/login', async (admin: IAdmin, thunkA
     }
 })
 
-export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+export const getAll = createAsyncThunk('customers/getAll', async (_, thunkAPI) => {
     try{
-        const token = await JSON.parse(localStorage.getItem('jwt') as string)
-        return await authServices.logout(token)
+        // return await customerServices.getAll(token)
+        return await customerServices.getAll(token)
     }catch(error: any){
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 })
 
-export const authSlice = createSlice({
-    name: 'Auth',
+
+export const customerSlice = createSlice({
+    name: 'Customer',
     initialState,
     reducers: {
         reset: (state) => {
@@ -52,39 +54,36 @@ export const authSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder
-        
-        .addCase(login.pending, (state) => {
+        builder 
+        .addCase(create.pending, (state) => {
             state.isLoading = true
         })
-        .addCase(login.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true  
-            state.admin = action.payload
-        })
-          .addCase(login.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
-            state.message = action.payload as string
-            state.admin = null
-        })
-        .addCase(logout.pending, (state) => {
-            state.isLoading = true
-        })
-        .addCase(logout.fulfilled, (state, action) => {
+        .addCase(create.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.admin = null
         })
-          .addCase(logout.rejected, (state, action) => {
+        .addCase(create.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload as string
-            state.admin = null
+        })
+        .addCase(getAll.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(getAll.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.customers = action.payload
+        })
+        .addCase(getAll.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload as string
+            state.customers = null
         })
     }
 })
 
 
-export const { reset } = authSlice.actions
-export default authSlice.reducer
+export const { reset } = customerSlice.actions
+export default customerSlice.reducer

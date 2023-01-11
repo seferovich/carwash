@@ -3,10 +3,37 @@ export interface IAdmin {
     password: string
 }
 
-export interface IState {
-    admin: IAdmin | null,
-    isError: boolean,
-    isLoading: boolean,
-    isSuccess: boolean,
-    message: string
+
+export interface ICustomer {
+    name: string, 
+    dob: Date | string,
+    _id?: string,
+    points?: number
 }
+
+
+export interface IOrder {
+    orders: [
+      {
+        name: string,
+        price: number,
+        selected: boolean
+      },
+      {
+        name: string,
+        price: number,
+        selected: boolean
+      },
+      {
+        name: string,
+        price: number,
+        selected: boolean
+      },
+      {
+        name: string,
+        price: number,
+        selected: boolean
+      }
+    ],
+    customer?: number | string | null
+  }

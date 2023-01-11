@@ -5,7 +5,7 @@ const orderRouter = express.Router()
 
 
 orderRouter.post('/api/orders/create', auth, orderController.create)
-orderRouter.delete('/api/orders/remove', auth, orderController.remove)
+orderRouter.delete('/api/orders/remove/:id', auth, orderController.remove)
 orderRouter.get('/api/orders/get/:id', auth, orderController.getOrderById)
 orderRouter.get('/api/orders/get', auth, orderController.getAllOrders)
 

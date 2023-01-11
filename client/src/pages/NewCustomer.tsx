@@ -1,24 +1,23 @@
 import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks/hooks'
+import { ICustomer } from '../globals/interfaces';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import {Container} from '@mui/material';
-import {TextField, FormControlLabel, Button} from '@mui/material';;
-
+import {TextField, FormControlLabel, Button} from '@mui/material';
+import { create, getAll } from '../features/customers/customerSlice'
 
 const drawerWidth = 280
 
-interface IFormData {
-  name: string,
-  dob: Date | string | null
-}
 
 
 function NewCustomer() {
-  const [formData, setFormData] = useState<IFormData>({
+  const dispatch = useAppDispatch()
+  const [formData, setFormData] = useState<ICustomer>({
     name: '',
-    dob: '10/31/2000'
+    dob: '0/0/0000'
   })
 
 
@@ -32,7 +31,12 @@ function NewCustomer() {
 
   const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(formData)
+    dispatch(create(formData))
+    dispatch(getAll())
+    setFormData({
+      name: '',
+      dob: '00/00/0000'
+    })
   }
 
   return (
