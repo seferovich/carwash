@@ -183,7 +183,7 @@ function NewOrder() {
                 </RadioGroup>
               </FormControl>
               
-              <h2>{JSON.stringify(formData)}</h2>
+              
               
 
               
