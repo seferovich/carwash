@@ -39,6 +39,18 @@ const getOrderById = async (req: Request, res: Response) => {
     }
 }
 
+const getOrderByCustomer = async (req: Request, res: Response) => {
+    try{
+        const order = await Order.find({'customer': req.params.id})
+        if(!order){
+            res.status(404).send('Not found')
+        }
+        res.status(200).send(order)
+    }catch(e){
+        res.status(400).send(e)
+    }
+}
+
 const getAllOrders = async (req: Request, res: Response) => {
     try{
         const orders = await Order.find({})
@@ -52,9 +64,12 @@ const getAllOrders = async (req: Request, res: Response) => {
 }
 
 
+
+
 export const orderController = {
     create,
     getOrderById,
+    getOrderByCustomer,
     getAllOrders,
     remove
 }

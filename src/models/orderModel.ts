@@ -76,6 +76,8 @@ const orderSchema = new mongoose.Schema({
 })
 
 
+
+
 // Loops trough the array of objects and calculatest the total price
 // Adds a point to customer points
 // If the customer has 10 points, discount is 20%
@@ -111,6 +113,7 @@ orderSchema.pre('save', async function () {
     
     order.total = totalPrice
 })
+
 
 
 const Order = mongoose.model<IOrder>('Order', orderSchema)

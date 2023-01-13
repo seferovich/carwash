@@ -1,4 +1,5 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+import { RootState } from '../../app/store'
 import {IOrder} from '../../globals/interfaces'
 import { orderServices } from './orderServices'
 // import { customerServices } from './customerServices'
@@ -7,7 +8,8 @@ import { orderServices } from './orderServices'
 const token = JSON.parse(localStorage.getItem('jwt') as string)
 
 export interface IState {
-    orders: IOrder | null,
+    orders: IOrder[] | null,
+    customerOrders: IOrder[] | null
     isError: boolean,
     isLoading: boolean,
     isSuccess: boolean,
@@ -16,6 +18,7 @@ export interface IState {
 
 const initialState: IState = {
     orders: null, 
+    customerOrders: null,
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -32,10 +35,32 @@ export const createOrder = createAsyncThunk('orders/create', async (order: IOrde
     }
 })
 
-export const getAll = createAsyncThunk('orders/getAll', async (_, thunkAPI) => {
+export const getAllOrders = createAsyncThunk<IOrder[], undefined, { state: RootState }>('orders/getAll', async (_, thunkAPI) => {
     try{
         // return await customerServices.getAll(token)
+        const token = thunkAPI.getState().auth.admin!
         return await orderServices.getAll(token)
+    }catch(error: any){
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
+export const getByCustomerId = createAsyncThunk('orders/getByCustomerId', async (customerId: string | number, thunkAPI) => {
+    try{
+        // return await customerServices.getAll(token)
+        return await orderServices.getByCustomerId(customerId, token)
+    }catch(error: any){
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const removeOrder = createAsyncThunk('orders/removeOrder', async (customerId: string | number, thunkAPI) => {
+    try{
+        // return await customerServices.getAll(token)
+        return await orderServices.remove(customerId, token)
     }catch(error: any){
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -68,15 +93,31 @@ export const orderSlice = createSlice({
             state.isError = true
             state.message = action.payload as string
         })
-        .addCase(getAll.pending, (state) => {
+        
+        .addCase(getAllOrders.pending, (state) => {
             state.isLoading = true
         })
-        .addCase(getAll.fulfilled, (state, action) => {
+        .addCase(getAllOrders.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
             state.orders = action.payload
         })
-        .addCase(getAll.rejected, (state, action) => {
+        .addCase(getAllOrders.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload as string
+            state.orders = null
+        })
+        
+        .addCase(getByCustomerId.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(getByCustomerId.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.customerOrders = action.payload
+        })
+        .addCase(getByCustomerId.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload as string

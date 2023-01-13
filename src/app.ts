@@ -20,11 +20,12 @@ app.use(cors())
 app.use(adminRouter)
 app.use(customerRouter)
 app.use(orderRouter)
+
 __dirname = path.resolve()
-app.use(express.static(path.join(__dirname, './client/build')));
+app.use(express.static(path.join(__dirname, './client/build')))
 
 app.get('/*', (req: Request, res: Response) => {
- res.sendFile(path.join(__dirname, './client/build', 'index.html'));
-});
+ res.sendFile(path.join(__dirname, './client/build', 'index.html'))
+})
 
 export default app

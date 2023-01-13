@@ -23,19 +23,31 @@ const getAll = async (token: string) => {
         },
     }
 
-    const response = await axios.get('/api/customers/get/', config)
+    const response = await axios.get('/api/customers/get', config)
 
     return response.data
 }
 
-const remove = async (id: number | string, token: string) => {
+const getById = async (userId: string | number, token: string) => {
     const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
     }
 
-    const response = await axios.delete(`/api/customers/${id}`, config)
+    const response = await axios.get(`/api/customers/get/${userId}`, config)
+
+    return response.data
+}
+
+const remove = async (customerId: number | string, token: string) => {
+    const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+    }
+
+    const response = await axios.delete(`/api/customers/remove/${customerId}`, config)
     return response.data
 }
 
@@ -43,5 +55,6 @@ const remove = async (id: number | string, token: string) => {
 export const customerServices = {
     create,
     getAll,
+    getById,
     remove
 }

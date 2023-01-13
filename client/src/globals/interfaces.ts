@@ -35,5 +35,8 @@ export interface IOrder {
         selected: boolean
       }
     ],
+    _id?: string,
+    total?: number,
+    createdAt?: string | Date,
     customer?: number | string | null
   }

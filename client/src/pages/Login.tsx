@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import { IAdmin } from '../globals/interfaces';
 import {useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { login, reset } from '../features/auth/authSlice'
+import { login} from '../features/auth/authSlice'
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -18,7 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 function Login() {
-
+  const dispatch = useAppDispatch()
   const [formData, setFormData] = useState<IAdmin>({
     username: '',
     password: ''
@@ -41,7 +41,7 @@ function Login() {
   const {username, password} = formData
 
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+ 
 
   const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
 
@@ -53,8 +53,6 @@ function Login() {
     if(isSuccess || admin){
       navigate('/main/orders/new')
     }
-
-    dispatch(reset())
 
   }, [admin, isError, isSuccess, message, navigate, dispatch])
 
@@ -68,7 +66,8 @@ function Login() {
           justifyContent: 'center',
           alignContent: 'center',
           marginTop: '40vh'
-        }}>
+        }}
+        >
           <CircularProgress />
         </Box>
       </Container>
@@ -80,7 +79,7 @@ function Login() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 30,
+          marginTop: {xl: 30, xs: 20},
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

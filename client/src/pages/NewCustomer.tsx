@@ -6,15 +6,16 @@ import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import {Container} from '@mui/material';
-import {TextField, FormControlLabel, Button} from '@mui/material';
+import {TextField, Button} from '@mui/material';
 import { create, getAll } from '../features/customers/customerSlice'
-
+import CircularProgress from '@mui/material/CircularProgress';
 const drawerWidth = 280
 
 
 
 function NewCustomer() {
   const dispatch = useAppDispatch()
+  const {isLoading} = useAppSelector(state => state.customer)
   const [formData, setFormData] = useState<ICustomer>({
     name: '',
     dob: '0/0/0000'
@@ -37,6 +38,23 @@ function NewCustomer() {
       name: '',
       dob: '00/00/0000'
     })
+  }
+
+  if(isLoading){
+    return (
+      <Container maxWidth='xs'>
+        <CssBaseline />
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+          marginTop: '40vh'
+        }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    )
   }
 
   return (

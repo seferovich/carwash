@@ -6,11 +6,12 @@ import { Typography } from '@mui/material';
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useAppSelector } from '../hooks/hooks';
 import { ICustomer } from '../globals/interfaces';
 import { useAppDispatch } from '../hooks/hooks';
-import { reset, getAll, create } from '../features/customers/customerSlice';
-import {createOrder} from '../features/orders/orderSlice';
+import { reset as resetCustomer, getAll} from '../features/customers/customerSlice';
+import {createOrder, reset as resetOrder, getAllOrders} from '../features/orders/orderSlice';
 
 
 const drawerWidth = 280
@@ -47,18 +48,37 @@ function NewOrder() {
   })
 
   const dispatch = useAppDispatch()
-  const handleChangeCustomer = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement
-    setFormData((prevState) => ({
-        ...prevState,
-        [target.name]: target.value
-    }))
-  }
+  
 
   const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(formData)
     dispatch(createOrder(formData))
+    setFormData({
+      orders: [
+        {
+          name: 'TyreWash',
+          price: 12,
+          selected: false
+        },
+        {
+          name: 'BodyWash',
+          price: 12,
+          selected: false
+        },
+        {
+          name: 'InteriorCleaning',
+          price: 12,
+          selected: false
+        },
+        {
+          name: 'IneriorVacuuming',
+          price: 12,
+          selected: false
+        }
+      ],
+      customer: undefined
+    })
   }
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -68,21 +88,43 @@ function NewOrder() {
   }
 
   
-
-  const {customers, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.customer)
+  const {admin} = useAppSelector((state) => state.auth)
+  const {customers, isError, isSuccess, message} = useAppSelector((state) => state.customer)
+  const {isLoading} = useAppSelector((state) => state.order)
 
   useEffect(() => {
     if(isError){
         toast.error(message)
     }
-
-    dispatch(reset())
-
-  }, [customers, isError, isSuccess, message, dispatch])
+   
+    return () => {
+      dispatch(resetCustomer())
+      dispatch(resetOrder())
+    }
+  }, [admin, isError, isSuccess, message, dispatch])
 
   useEffect(() => {
+    dispatch(getAllOrders())
     dispatch(getAll())
+
   }, [])
+
+  if(isLoading){
+    return (
+      <Container maxWidth='xs'>
+        <CssBaseline />
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+          marginTop: '40vh'
+        }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    )
+  }
  
  
 

@@ -5,7 +5,7 @@ import { authServices } from './authServices'
 
 const admin = JSON.parse(localStorage.getItem('jwt') as string)
 export interface IState {
-    admin: IAdmin | null,
+    admin: string | null,
     isError: boolean,
     isLoading: boolean,
     isSuccess: boolean,
@@ -22,6 +22,7 @@ const initialState: IState = {
 
 export const login = createAsyncThunk('auth/login', async (admin: IAdmin, thunkAPI) => {
     try{
+        
         return await authServices.login(admin)
         
     }catch(error: any){
@@ -60,14 +61,15 @@ export const authSlice = createSlice({
         .addCase(login.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true  
-            state.admin = action.payload
+            state.admin = action.payload.token
         })
-          .addCase(login.rejected, (state, action) => {
+        .addCase(login.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload as string
             state.admin = null
         })
+
         .addCase(logout.pending, (state) => {
             state.isLoading = true
         })
