@@ -10,11 +10,8 @@ import Container from '@mui/material/Container';
 import { IAdmin } from '../globals/interfaces';
 import {useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { login} from '../features/auth/authSlice'
+import { login, reset } from '../features/auth/authSlice'
 import CircularProgress from '@mui/material/CircularProgress';
-
-
-
 
 
 function Login() {
@@ -36,6 +33,7 @@ function Login() {
     e.preventDefault()
     const adminData = {username, password}
     dispatch(login(adminData))
+    dispatch(reset())
   }
 
   const {username, password} = formData
@@ -91,7 +89,7 @@ function Login() {
         <Typography component="h1" variant="h6">
           Please login to continue:
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -105,7 +103,7 @@ function Login() {
           <TextField
             margin="normal"
             required
-            fullWidth
+            fullWidth 
             name="password"
             label="Password"
             type="password"

@@ -12,13 +12,13 @@ const register = async (req: Request, res: Response) => {
     }
 }
 
-const login = async (req: Request, res: Response) => {
-    const admin = await Admin.findByCredentials(req.body.username, req.body.password)
+const login = async (req: Request, res: Response) => {   
     try{
+        const admin = await Admin.findByCredentials(req.body.username, req.body.password)
         const token = await admin.generateAuthToken()
-        res.status(200).send({admin, token})
+        return res.status(200).send({admin, token})
     }catch(e){
-        res.status(400).send(e)
+        return res.status(500).send(`Incorrect password or username!`)
     }
 }
 

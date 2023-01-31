@@ -25,8 +25,9 @@ const initialState: IState = {
     message: ''
 }
 
-export const createOrder = createAsyncThunk('orders/create', async (order: IOrder, thunkAPI) => {
+export const createOrder = createAsyncThunk<IOrder, IOrder, { state: RootState }>('orders/create', async (order: IOrder, thunkAPI) => {
     try{
+        const token = thunkAPI.getState().auth.admin!
         return await orderServices.create(order, token)
         
     }catch(error: any){
@@ -47,9 +48,10 @@ export const getAllOrders = createAsyncThunk<IOrder[], undefined, { state: RootS
 })
 
 
-export const getByCustomerId = createAsyncThunk('orders/getByCustomerId', async (customerId: string | number, thunkAPI) => {
+export const getByCustomerId = createAsyncThunk<IOrder[], string | number, { state: RootState }>('orders/getByCustomerId', async (customerId: string | number, thunkAPI) => {
     try{
         // return await customerServices.getAll(token)
+        const token = thunkAPI.getState().auth.admin!
         return await orderServices.getByCustomerId(customerId, token)
     }catch(error: any){
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -57,9 +59,10 @@ export const getByCustomerId = createAsyncThunk('orders/getByCustomerId', async 
     }
 })
 
-export const removeOrder = createAsyncThunk('orders/removeOrder', async (customerId: string | number, thunkAPI) => {
+export const removeOrder = createAsyncThunk<IOrder, string | number, { state: RootState }>('orders/removeOrder', async (customerId: string | number, thunkAPI) => {
     try{
         // return await customerServices.getAll(token)
+        const token = thunkAPI.getState().auth.admin!
         return await orderServices.remove(customerId, token)
     }catch(error: any){
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -72,7 +75,7 @@ export const orderSlice = createSlice({
     name: 'Order',
     initialState,
     reducers: {
-        reset: (state) => {
+        resetOrder: (state) => {
             state.isLoading = false
             state.isError = false
             state.isSuccess = false
@@ -127,5 +130,5 @@ export const orderSlice = createSlice({
 })
 
 
-export const { reset } = orderSlice.actions
+export const { resetOrder } = orderSlice.actions
 export default orderSlice.reducer

@@ -10,8 +10,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useAppSelector } from '../hooks/hooks';
 import { ICustomer } from '../globals/interfaces';
 import { useAppDispatch } from '../hooks/hooks';
-import { reset as resetCustomer, getAll} from '../features/customers/customerSlice';
-import {createOrder, reset as resetOrder, getAllOrders} from '../features/orders/orderSlice';
+import { resetCustomer, getAll} from '../features/customers/customerSlice';
+import {createOrder,resetOrder, getAllOrders} from '../features/orders/orderSlice';
 
 
 const drawerWidth = 280
@@ -54,6 +54,7 @@ function NewOrder() {
     e.preventDefault()
     console.log(formData)
     dispatch(createOrder(formData))
+    dispatch(resetOrder)
     setFormData({
       orders: [
         {
@@ -92,16 +93,7 @@ function NewOrder() {
   const {customers, isError, isSuccess, message} = useAppSelector((state) => state.customer)
   const {isLoading} = useAppSelector((state) => state.order)
 
-  useEffect(() => {
-    if(isError){
-        toast.error(message)
-    }
-   
-    return () => {
-      dispatch(resetCustomer())
-      dispatch(resetOrder())
-    }
-  }, [admin, isError, isSuccess, message, dispatch])
+  
 
   useEffect(() => {
     dispatch(getAllOrders())

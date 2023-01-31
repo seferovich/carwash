@@ -21,11 +21,11 @@ app.use(adminRouter)
 app.use(customerRouter)
 app.use(orderRouter)
 
-__dirname = path.resolve()
-app.use(express.static(path.join(__dirname, './client/build')))
+// __dirname = path.resolve()
+// app.use(express.static(path.join(__dirname, './client/build')))
 
-app.get('/*', (req: Request, res: Response) => {
- res.sendFile(path.join(__dirname, './client/build', 'index.html'))
-})
+// app.get('/*', (req: Request, res: Response) => {
+//  res.sendFile(path.join(__dirname, './client/build', 'index.html'))
+// })
 
 export default app

@@ -24,7 +24,7 @@ import {Container} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks'
-import { logout, reset} from '../features/auth/authSlice';
+import { logout, reset } from '../features/auth/authSlice';
 
 
 
@@ -33,6 +33,8 @@ const drawerWidth = 280
 
 export default function Sidebar() {
   const [mobileOpen, setMobileOpen] = React.useState(false)
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -41,11 +43,11 @@ export default function Sidebar() {
   const handleLogout = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault()
     dispatch(logout())
+
   }
 
 
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+
 
   const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
 
@@ -54,13 +56,13 @@ export default function Sidebar() {
         toast.error(message)
     }
 
-    if(isSuccess || !admin){
-      navigate('/login')
-    }
+    // if(!isSuccess || !admin){
+    //   navigate('/login')
+    // }
 
     dispatch(reset())
 
-  }, [admin, isError, isSuccess, message, navigate, dispatch])
+  }, [admin, isError, isSuccess, message])
 
 
 

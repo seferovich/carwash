@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Typography } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
@@ -14,35 +14,59 @@ import { getCustomerById } from '../features/customers/customerSlice';
 import { getAllOrders, getByCustomerId, removeOrder } from '../features/orders/orderSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 
 const drawerWidth = 280
 
 function Orders() {
- 
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    // e.preventDefault()
-    const target = e.target as Element
+  const [dialogId, setDialogId] = useState('')
+  const [open, setOpen] = React.useState(false);
 
-    dispatch(getCustomerById(target.id))
-    dispatch(getByCustomerId(target.id))
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.target as Element
+    
+    await dispatch(getCustomerById(target.id))
+    await dispatch(getByCustomerId(target.id))
+    navigate(`/main/customers/orders/${target.id}`)
     
   }
 
-  const handleRemove = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickOpen = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-
+    setOpen(true)
     const target = e.target as HTMLButtonElement
+    setDialogId(target.id)
+    // await dispatch(removeOrder(target.id))
+    // await dispatch(getAllOrders())
+  }
 
-    dispatch(removeOrder(target.id))
-    dispatch(getAllOrders())
+  const handleRemove = async () => {
+    await dispatch(removeOrder(dialogId))
+    await dispatch(getAllOrders())
+
+    handleClose()
   }
 
   useEffect(() => {
     dispatch(getAllOrders())
+    
   }, [])
   const orders = useAppSelector(state => state.order.orders)
+
+  console.log(dialogId)
 
   return (
     <>
@@ -59,7 +83,7 @@ function Orders() {
               
             </Box>
             
-            <List sx={{ width: '100%', maxWidth: "100%", bgcolor: 'background.paper' }}>
+            <List sx={{ width: '100%', maxWidth: "100%", bgcolor: 'background.paper', zIndex: 3 }}>
               <ListItem
                 disableGutters
                 secondaryAction={
@@ -74,6 +98,7 @@ function Orders() {
               {orders!.map((item, i) => (
                 <>
                   <ListItem
+                    
                     key={i}
                     disableGutters
                     secondaryAction={
@@ -92,8 +117,8 @@ function Orders() {
                           See customer
                         </Button>
                       </Link> 
-                      <IconButton id={item._id} onClick={handleRemove}  > 
-                          <DeleteIcon sx={{zIndex: 1}} id={item._id} color='primary' /> 
+                      <IconButton id={item._id}  onClick={handleClickOpen}  > 
+                          <DeleteIcon sx={{zIndex: -999}} id={item._id} color='primary' /> 
                         </IconButton>
                   </ListItem>
                   
@@ -106,6 +131,24 @@ function Orders() {
             
         </Box>  
       </Box>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Are you sure you want to delete this order?
+        </DialogTitle>
+        
+        <DialogActions>
+          <Button onClick={handleRemove} autoFocus>
+            Delete
+          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
 
       
     </>

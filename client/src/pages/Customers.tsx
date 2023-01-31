@@ -1,6 +1,6 @@
 
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,8 +13,14 @@ import IconButton from '@mui/material/IconButton';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { getAll, getCustomerById, removeCustomer } from '../features/customers/customerSlice';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getByCustomerId } from '../features/orders/orderSlice';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 
 const drawerWidth = 280
@@ -22,25 +28,68 @@ const drawerWidth = 280
 
 function Customers() {
   const dispatch = useAppDispatch()
-  
+  const navigate = useNavigate()
+  const {customers, isSuccess} = useAppSelector(state => state.customer)
+  const [dialogId, setDialogId] = useState('')
+  const [open, setOpen] = React.useState(false);
+
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  // const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   const target = e.target as Element
+    
+  //   await dispatch(getCustomerById(target.id))
+  //   await dispatch(getByCustomerId(target.id))
+  //   navigate(`/main/customers/orders/${target.id}`)
+    
+  // }
+
+  const handleClickOpen = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setOpen(true)
+    const target = e.target as HTMLButtonElement
+    setDialogId(target.id)
+    // await dispatch(removeOrder(target.id))
+    // await dispatch(getAllOrders())
+  }
+
+  const handleRemove = async () => {
+    await dispatch(removeCustomer(dialogId))
+    await dispatch(getAll())
+
+    handleClose()
+  }
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const target = e.target as Element
 
-    dispatch(getCustomerById(target.id))
-    dispatch(getByCustomerId(target.id))
+    await dispatch(getCustomerById(target.id))
+    await dispatch(getByCustomerId(target.id))
+    navigate(`/main/customers/orders/${target.id}`)
     
   }
-  const customers = useAppSelector(state => state.customer.customers)
+  
 
-  const handleRemove = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+  // const handleRemove = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault()
 
-    const target = e.target as HTMLButtonElement
+  //   const target = e.target as HTMLButtonElement
 
-    dispatch(removeCustomer(target.id))
-    dispatch(getAll())
-  }
+  //   await dispatch(removeCustomer(target.id))
+  //   await dispatch(getAll())
+
+    
+  //   // if(isSuccess) {
+  //   //   dispatch(getAll())
+  //   // }
+  //   // dispatch(getAll())
+  // }
+  useEffect(() => {
+    dispatch(getAll())    
+  }, [])
 
   
   return (
@@ -64,12 +113,12 @@ function Customers() {
                   disableGutters
                   secondaryAction={
                     <> 
-                      <Link to={`/main/customers/orders/${item._id}`}>
+                      {/* <Link to={`/main/customers/orders/${item._id}`}> */}
                         <Button id={item._id} variant="outlined" onClick={handleClick}>
                           See orders
                         </Button>
-                      </Link>
-                      <IconButton id={item._id} onClick={handleRemove} > 
+                      {/* </Link> */}
+                      <IconButton id={item._id} onClick={handleClickOpen} > 
                         <DeleteIcon sx={{zIndex: -999}} id={item._id} color='primary' /> 
                       </IconButton>
                     </>
@@ -83,7 +132,23 @@ function Customers() {
         </Box>  
       </Box>
 
-      
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Are you sure you want to delete this customer?
+        </DialogTitle>
+        
+        <DialogActions>
+          <Button onClick={handleRemove} autoFocus>
+            Delete
+          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }

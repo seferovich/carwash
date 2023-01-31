@@ -7,11 +7,37 @@ import Customers from './pages/Customers';
 import NewCustomer from './pages/NewCustomer';
 import NewOrder from './pages/NewOrder';
 import Orders from './pages/Orders';
+import {toast} from 'react-toastify'
+import { resetCustomer } from './features/customers/customerSlice';
+import { resetOrder } from './features/orders/orderSlice';
 
 
 
 function Main() {
-  
+  const dispatch = useAppDispatch()
+
+  const {admin} = useAppSelector((state) => state.auth)
+  const customers = useAppSelector((state) => state.customer)
+  const orders = useAppSelector((state) => state.order)
+
+  useEffect(() => {
+    if(customers.isError){
+        toast.error(customers.message)
+    }
+   
+    dispatch(resetCustomer())
+  }, [customers, customers.customer, customers.customers, customers.isError])
+
+  useEffect(() => {
+    if(orders.isError){
+        toast.error(orders.message)
+    }
+   
+    dispatch(resetOrder())
+  }, [orders, orders.customerOrders, orders.orders, orders.isError])
+
+
+
   return (
     <div className="Main">
      <Sidebar />

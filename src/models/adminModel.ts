@@ -44,13 +44,15 @@ adminSchema.methods.generateAuthToken = async function () {
 // Finding admin by username and comparing passwords
 adminSchema.statics.findByCredentials = async (username: string, password: string) => {
     const admin = await Admin.findOne({username})
+
     if(!admin) {
         throw new Error('Could not find!')
     }
 
     const isMatch = await bcrypt.compare(password, admin.password)
+    
     if(!isMatch){
-        throw new Error('Wrong password or username')
+        throw new Error('Password incorrect')
     }
 
     return admin

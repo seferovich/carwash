@@ -11,7 +11,7 @@ const create = async (customerData: ICustomer, token: string) => {
         },
     }
 
-    const response = await axios.post('/api/customers/create', customerData, config)
+    const response = await axios.post('http://localhost:5001/api/customers/create', customerData, config)
 
     return response.data
 }  
@@ -23,7 +23,7 @@ const getAll = async (token: string) => {
         },
     }
 
-    const response = await axios.get('/api/customers/get', config)
+    const response = await axios.get('http://localhost:5001/api/customers/get', config)
 
     return response.data
 }
@@ -35,7 +35,7 @@ const getById = async (userId: string | number, token: string) => {
         },
     }
 
-    const response = await axios.get(`/api/customers/get/${userId}`, config)
+    const response = await axios.get(`http://localhost:5001/api/customers/get/${userId}`, config)
 
     return response.data
 }
@@ -47,7 +47,7 @@ const remove = async (customerId: number | string, token: string) => {
         },
     }
 
-    const response = await axios.delete(`/api/customers/remove/${customerId}`, config)
+    const response = await axios.delete(`http://localhost:5001/api/customers/remove/${customerId}`, config)
     return response.data
 }
 

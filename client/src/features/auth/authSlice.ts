@@ -26,7 +26,8 @@ export const login = createAsyncThunk('auth/login', async (admin: IAdmin, thunkA
         return await authServices.login(admin)
         
     }catch(error: any){
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        console.log(error) 
+        const message = error.response.data 
         return thunkAPI.rejectWithValue(message)
     }
 })
@@ -36,6 +37,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
         const token = await JSON.parse(localStorage.getItem('jwt') as string)
         return await authServices.logout(token)
     }catch(error: any){
+        console.log(error) 
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
@@ -78,7 +80,7 @@ export const authSlice = createSlice({
             state.isSuccess = true
             state.admin = null
         })
-          .addCase(logout.rejected, (state, action) => {
+        .addCase(logout.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload as string

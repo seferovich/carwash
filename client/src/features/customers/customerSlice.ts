@@ -24,8 +24,9 @@ const initialState: IState = {
     message: ''
 }
 
-export const create = createAsyncThunk('customers/create', async (customer: ICustomer, thunkAPI) => {
+export const create = createAsyncThunk<ICustomer, ICustomer, {state: RootState}>('customers/create', async (customer: ICustomer, thunkAPI) => {
     try{
+        const token = thunkAPI.getState().auth.admin!
         return await customerServices.create(customer, token)
         
     }catch(error: any){
@@ -44,19 +45,20 @@ export const getAll = createAsyncThunk<ICustomer[], undefined, {state: RootState
     }
 })
 
-export const getCustomerById = createAsyncThunk('customers/getById', async (customerId: string | number, thunkAPI) => {
+export const getCustomerById = createAsyncThunk<ICustomer, number | string, {state: RootState}>('customers/getById', async (customerId: string | number, thunkAPI) => {
     try{
-        // return await customerServices.getAll(token)
+        const token = thunkAPI.getState().auth.admin!
         return await customerServices.getById(customerId, token)
+
     }catch(error: any){
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 })
 
-export const removeCustomer = createAsyncThunk('customers/remove', async (customerId: string | number, thunkAPI) => {
+export const removeCustomer = createAsyncThunk<ICustomer, number | string, {state: RootState}>('customers/remove', async (customerId: string | number, thunkAPI) => {
     try{
-        // return await customerServices.getAll(token)
+        const token = thunkAPI.getState().auth.admin!
         return await customerServices.remove(customerId, token)
     }catch(error: any){
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -70,7 +72,7 @@ export const customerSlice = createSlice({
     name: 'Customer',
     initialState,
     reducers: {
-        reset: (state) => {
+        resetCustomer: (state) => {
             state.isLoading = false
             state.isError = false
             state.isSuccess = false
@@ -138,5 +140,5 @@ export const customerSlice = createSlice({
 })
 
 
-export const { reset } = customerSlice.actions
+export const { resetCustomer } = customerSlice.actions
 export default customerSlice.reducer

@@ -4,11 +4,12 @@ import {IAdmin} from "../../globals/interfaces"
 // 'http://localhost:5001'
 const login = async (adminData: IAdmin) => {
     // Added this link so it works on Heroku
-    const response = await axios.post('/api/admin/login', adminData)
+    const response = await axios.post('http://localhost:5001/api/admin/login', adminData)
 
     if (response.data){
         localStorage.setItem('jwt', JSON.stringify(response.data.token))
     }
+        
     return response.data
 }   
 const logout = async (token: string) => {
@@ -18,7 +19,7 @@ const logout = async (token: string) => {
         },
       }
       // Added this link so it works on Heroku
-    await axios.post('/api/admin/logout', undefined, config)
+    await axios.post('http://localhost:5001/api/admin/logout', undefined, config)
     localStorage.removeItem('jwt')
 }
 export const authServices = {
