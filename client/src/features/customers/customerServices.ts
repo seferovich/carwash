@@ -2,8 +2,7 @@ import { ICustomer } from "../../globals/interfaces"
 import axios from "axios"
 
 
-
-
+    
 const create = async (customerData: ICustomer, token: string) => {
     const config = {
         headers: {
@@ -35,7 +34,7 @@ const getById = async (userId: string | number, token: string) => {
         },
     }
 
-    const response = await axios.get(`/api/customers/get/${userId}`, config)
+    const response = await axios.get(`/api/customers/getById/${userId}`, config)
 
     return response.data
 }

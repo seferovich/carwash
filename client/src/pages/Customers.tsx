@@ -30,6 +30,7 @@ function Customers() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const {customers, isSuccess} = useAppSelector(state => state.customer)
+  // State for the target id that was clicked on remove, so it can be used with a dialog (popup)
   const [dialogId, setDialogId] = useState('')
   const [open, setOpen] = React.useState(false);
 
@@ -38,31 +39,24 @@ function Customers() {
     setOpen(false)
   }
 
-  // const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   const target = e.target as Element
-    
-  //   await dispatch(getCustomerById(target.id))
-  //   await dispatch(getByCustomerId(target.id))
-  //   navigate(`/main/customers/orders/${target.id}`)
-    
-  // }
 
   const handleClickOpen = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     setOpen(true)
     const target = e.target as HTMLButtonElement
+    // The dialog id is set here
     setDialogId(target.id)
-    // await dispatch(removeOrder(target.id))
-    // await dispatch(getAllOrders())
+
   }
 
   const handleRemove = async () => {
+    // Here it dispatches the customer id (target id) on the popup, and fetches all customers back for refresh
     await dispatch(removeCustomer(dialogId))
     await dispatch(getAll())
 
     handleClose()
   }
-
+  // Handle click for the cusomter orders and customer info
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const target = e.target as Element
 
@@ -87,6 +81,8 @@ function Customers() {
   //   // }
   //   // dispatch(getAll())
   // }
+
+  // Refresh after click
   useEffect(() => {
     dispatch(getAll())    
   }, [])

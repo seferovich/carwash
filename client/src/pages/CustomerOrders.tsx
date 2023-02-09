@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import { useAppSelector } from '../hooks/hooks';
+import NotFound from './NotFound';
 
 
 
@@ -21,7 +22,8 @@ function CustomerOrders() {
   const customerState = useAppSelector(state => state.customer)
   const ordersState = useAppSelector(state => state.order)
   
-  
+
+
   if(customerState.isLoading || ordersState.isLoading){
     return (
       <Container maxWidth='xs'>

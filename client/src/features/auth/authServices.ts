@@ -3,7 +3,7 @@ import {IAdmin} from "../../globals/interfaces"
 
 // 'http://localhost:5001'
 const login = async (adminData: IAdmin) => {
-    // Added this link so it works on Heroku
+
     const response = await axios.post('/api/admin/login', adminData)
 
     if (response.data){
@@ -18,7 +18,7 @@ const logout = async (token: string) => {
           Authorization: `Bearer ${token}`,
         },
       }
-      // Added this link so it works on Heroku
+
     await axios.post('/api/admin/logout', undefined, config)
     localStorage.removeItem('jwt')
 }

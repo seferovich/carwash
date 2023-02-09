@@ -70,7 +70,7 @@ export const removeOrder = createAsyncThunk<IOrder, string | number, { state: Ro
     }
 })
 
-
+// The isSuccess will only apply on creating and removing the order
 export const orderSlice = createSlice({
     name: 'Order',
     initialState,
@@ -102,7 +102,6 @@ export const orderSlice = createSlice({
         })
         .addCase(getAllOrders.fulfilled, (state, action) => {
             state.isLoading = false
-            state.isSuccess = true
             state.orders = action.payload
         })
         .addCase(getAllOrders.rejected, (state, action) => {
@@ -117,10 +116,23 @@ export const orderSlice = createSlice({
         })
         .addCase(getByCustomerId.fulfilled, (state, action) => {
             state.isLoading = false
-            state.isSuccess = true
             state.customerOrders = action.payload
         })
         .addCase(getByCustomerId.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload as string
+            state.orders = null
+        })
+
+        .addCase(removeOrder.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(removeOrder.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+        })
+        .addCase(removeOrder.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload as string

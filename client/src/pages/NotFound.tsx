@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Button, Container, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { Link } from 'react-router-dom';
 
 
 function NotFound() {
@@ -13,14 +14,16 @@ function NotFound() {
         minHeight: '85vh'
       }}
     >
-      <Container maxWidth="md">
+      <Container maxWidth="xs" sx={{xs:{'marginLeft': '280px'}}}>
             <Typography variant="h1">
               404
             </Typography>
             <Typography variant="h6">
-              The page you’re looking for doesn’t exist.
+              The customer you're looking for doesn't exist.
             </Typography>
-            <Button variant="contained">Back Home</Button>
+            <Link to='/main/orders/new'>
+              <Button variant="contained">Back</Button>
+            </Link>
       </Container>
     </Box>
   )

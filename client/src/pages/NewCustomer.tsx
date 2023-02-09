@@ -9,13 +9,14 @@ import {Container} from '@mui/material';
 import {TextField, Button} from '@mui/material';
 import { create, getAll } from '../features/customers/customerSlice'
 import CircularProgress from '@mui/material/CircularProgress';
+import { toast } from 'react-toastify';
 const drawerWidth = 280
 
 
 
 function NewCustomer() {
   const dispatch = useAppDispatch()
-  const {isLoading} = useAppSelector(state => state.customer)
+  const {isLoading, isSuccess, isError} = useAppSelector(state => state.customer)
   const [formData, setFormData] = useState<ICustomer>({
     name: '',
     dob: '0/0/0000'
@@ -30,10 +31,11 @@ function NewCustomer() {
     }))
   }
 
-  const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch(create(formData))
-    dispatch(getAll())
+    await dispatch(create(formData))
+    await dispatch(getAll())
+    // Reset form data after submit
     setFormData({
       name: '',
       dob: '00/00/0000'

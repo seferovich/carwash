@@ -49,20 +49,9 @@ export default function Sidebar() {
 
 
 
-  const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
+  const {isLoading} = useAppSelector((state) => state.auth)
 
-  useEffect(() => {
-    if(isError){
-        toast.error(message)
-    }
-
-    // if(!isSuccess || !admin){
-    //   navigate('/login')
-    // }
-
-    dispatch(reset())
-
-  }, [admin, isError, isSuccess, message])
+ 
 
 
 

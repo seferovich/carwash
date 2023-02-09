@@ -16,8 +16,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 
@@ -27,8 +25,10 @@ const drawerWidth = 280
 function Orders() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  // State for the target id that was clicked on remove, so it can be used with a dialog (popup)
   const [dialogId, setDialogId] = useState('')
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
+  const orders = useAppSelector(state => state.order.orders)
 
 
   const handleClose = () => {
@@ -37,10 +37,14 @@ function Orders() {
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const target = e.target as Element
-    
-    await dispatch(getCustomerById(target.id))
-    await dispatch(getByCustomerId(target.id))
-    navigate(`/main/customers/orders/${target.id}`)
+    // Because the order can be without a customer, I check if it has it or not.
+    if(target.id === ''){
+      return navigate('/main/notFound')
+    }else{
+      await dispatch(getCustomerById(target.id))
+      await dispatch(getByCustomerId(target.id))
+      navigate(`/main/customers/orders/${target.id}`)
+    }
     
   }
 
@@ -48,25 +52,25 @@ function Orders() {
     e.preventDefault()
     setOpen(true)
     const target = e.target as HTMLButtonElement
+    // The dialog id is set here
     setDialogId(target.id)
-    // await dispatch(removeOrder(target.id))
-    // await dispatch(getAllOrders())
   }
 
   const handleRemove = async () => {
+    // Here it dispatches the customer id (target id) on the popup, and fetches all orders back for refresh
     await dispatch(removeOrder(dialogId))
     await dispatch(getAllOrders())
 
     handleClose()
   }
-
+  // Refresh/fetch after clicked on the page
   useEffect(() => {
     dispatch(getAllOrders())
-    
-  }, [])
-  const orders = useAppSelector(state => state.order.orders)
 
-  console.log(dialogId)
+  }, [])
+  
+
+ 
 
   return (
     <>
@@ -112,11 +116,11 @@ function Orders() {
                     
                     <ListItemText primary={String(item.createdAt).substring(0, 10)}   />
                     
-                    <Link to={`/main/customers/orders/${item.customer}`}>
+                    {/* <Link to={`/main/customers/orders/${item.customer}`}> */}
                         <Button id={item.customer as string} variant="outlined" onClick={handleClick}>
                           See customer
                         </Button>
-                      </Link> 
+                      {/* </Link>  */}
                       <IconButton id={item._id}  onClick={handleClickOpen}  > 
                           <DeleteIcon sx={{zIndex: -999}} id={item._id} color='primary' /> 
                         </IconButton>

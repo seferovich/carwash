@@ -25,7 +25,7 @@ const getAll = async (token: string) => {
 
     return response.data
 }
-
+// Get an order by the customer Id
 const getByCustomerId = async (customerId: string | number, token: string) => {
     const config = {
         headers: {

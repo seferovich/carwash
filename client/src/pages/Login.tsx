@@ -42,7 +42,7 @@ function Login() {
  
 
   const {admin, isLoading, isError, isSuccess, message} = useAppSelector((state) => state.auth)
-
+  // This useEffect tracks changes on admin state and shows error if there is one, and redirects to the main page if logged in
   useEffect(() => {
     if(isError){
         toast.error(message)
@@ -91,6 +91,7 @@ function Login() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
+            error={isError}
             margin="normal"
             required
             fullWidth
@@ -101,6 +102,7 @@ function Login() {
             autoFocus
           />
           <TextField
+            error={isError}
             margin="normal"
             required
             fullWidth 

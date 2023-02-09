@@ -99,7 +99,6 @@ export const customerSlice = createSlice({
         })
         .addCase(getAll.fulfilled, (state, action) => {
             state.isLoading = false
-            state.isSuccess = true
             state.customers = action.payload
         })
         .addCase(getAll.rejected, (state, action) => {
@@ -114,7 +113,6 @@ export const customerSlice = createSlice({
         })
         .addCase(getCustomerById.fulfilled, (state, action) => {
             state.isLoading = false
-            state.isSuccess = true
             state.customer = action.payload
         })
         .addCase(getCustomerById.rejected, (state, action) => {

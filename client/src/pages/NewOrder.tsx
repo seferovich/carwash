@@ -19,8 +19,11 @@ const drawerWidth = 280
 
 
 function NewOrder() {
+  const dispatch = useAppDispatch()
 
-
+  const {admin} = useAppSelector((state) => state.auth)
+  const {customers, message} = useAppSelector((state) => state.customer)
+  const {isLoading, isSuccess, isError} = useAppSelector((state) => state.order)
   const [formData, setFormData] = useState<IOrder>({
     orders: [
       {
@@ -47,14 +50,49 @@ function NewOrder() {
     customer: undefined
   })
 
-  const dispatch = useAppDispatch()
-  
+  // 
+  const handleRadioButtonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement
+    setFormData((prevState) => {
+
+      let updatedOrder: IOrder['orders'] = [...prevState.orders]
+      if (target.name === 'FullWash') {
+        updatedOrder[0].selected = true
+        updatedOrder[1].selected = true
+        updatedOrder[2].selected = true
+        updatedOrder[3].selected = true
+        target.value = String(true)
+      } else if (target.name === 'ExteriorWash') {
+        updatedOrder[0].selected = true
+        updatedOrder[1].selected = true
+        updatedOrder[2].selected = false
+        updatedOrder[3].selected = false
+        target.value = String(true)
+      } else if (target.name === 'InteriorWash') {
+        updatedOrder[0].selected = false
+        updatedOrder[1].selected = false
+        updatedOrder[2].selected = true
+        updatedOrder[3].selected = true
+        target.value = String(true)
+      }
+      return {
+        ...prevState,
+        orders: updatedOrder,
+      }
+    })
+  }
+
 
   const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(formData)
     dispatch(createOrder(formData))
-    dispatch(resetOrder)
+    
+    if(isSuccess) {
+      toast.success('Created!')
+      dispatch(resetOrder)
+    }
+     
     setFormData({
       orders: [
         {
@@ -80,21 +118,12 @@ function NewOrder() {
       ],
       customer: undefined
     })
+
+    
+    
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as Element
-    e.preventDefault()
-    console.log(target.id)
-  }
-
-  
-  const {admin} = useAppSelector((state) => state.auth)
-  const {customers, isError, isSuccess, message} = useAppSelector((state) => state.customer)
-  const {isLoading} = useAppSelector((state) => state.order)
-
-  
-
+  // Fetch all orders and customer on load
   useEffect(() => {
     dispatch(getAllOrders())
     dispatch(getAll())
@@ -120,36 +149,6 @@ function NewOrder() {
  
  
 
-  const handleRadioButtonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement
-    setFormData((prevState) => {
-      console.log(target.ariaSelected)
-      let updatedOrder: IOrder['orders'] = [...prevState.orders];
-      if (target.name === 'FullWash') {
-        updatedOrder[0].selected = true
-        updatedOrder[1].selected = true
-        updatedOrder[2].selected = true
-        updatedOrder[3].selected = true
-        target.checked = true
-      } else if (target.name === 'ExteriorWash') {
-        updatedOrder[0].selected = true
-        updatedOrder[1].selected = true
-        updatedOrder[2].selected = false
-        updatedOrder[3].selected = false
-        target.value = String(true)
-      } else if (target.name === 'InteriorWash') {
-        updatedOrder[0].selected = false
-        updatedOrder[1].selected = false
-        updatedOrder[2].selected = true
-        updatedOrder[3].selected = true
-        target.value = String(true)
-      }
-      return {
-        ...prevState,
-        orders: updatedOrder,
-      }
-    })
-  }
 
   return (
     <>
@@ -178,7 +177,6 @@ function NewOrder() {
 
               <Autocomplete
                 disablePortal
-                onClick={handleClick}
                 options={customers as ICustomer[]}
                 defaultValue={undefined}
                 fullWidth
