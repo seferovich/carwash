@@ -47,7 +47,7 @@ In backend:
 
 
 This project also has implemented CI/CD through Github workflows.
-It runs test and deploys the project to Heroku.
+It runs test and deploys the project to Heroku on push.
 
 
 Built by Isa Seferovic, 2023
