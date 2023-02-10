@@ -46,5 +46,8 @@ In backend:
 -Bcrypt for password hashing
 
 
+This project also has implemented CI/CD through Github workflows.
+It runs test and deploys the project to Heroku.
+
 
 Built by Isa Seferovic, 2023
