@@ -66,7 +66,7 @@ describe('POST, DELETE, PATCH, GET /api/customers', () => {
 
         test('Should get a customer by the id', async () => {
             const response = await request(app)
-            .get(`/api/customers/get/${customerOneId}`)
+            .get(`/api/customers/getById/${customerOneId}`)
             .set('Authorization', `Bearer ${adminOne.tokens[0].token}`)
             .send()
             .expect(200)
@@ -118,7 +118,7 @@ describe('POST, DELETE, PATCH, GET /api/customers', () => {
 
         test('Should not get a customer by the id', async () => {
             const response = await request(app)
-            .get(`/api/customers/get/${customerOneId}`)
+            .get(`/api/customers/getById/${customerOneId}`)
             .send()
             .expect(401)
 

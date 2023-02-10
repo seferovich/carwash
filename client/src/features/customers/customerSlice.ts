@@ -66,8 +66,7 @@ export const removeCustomer = createAsyncThunk<ICustomer, number | string, {stat
     }
 })
 
-
-
+// The isSuccess will only apply on creating and removing the customer
 export const customerSlice = createSlice({
     name: 'Customer',
     initialState,
